@@ -128,46 +128,63 @@ const ComparisonMatrix = () => {
         <div className="p-4">
             <h1 className="text-2xl font-bold mb-4">Comparison Matrix</h1>
             <div className="overflow-x-auto">
-                <table className="min-w-full bg-white border border-gray-300">
+                <table className="min-w-full bg-white border border-gray-300 table-fixed">
+                    <colgroup>
+                        <col className="w-1/6" />
+                        {aspects.map((aspect) => (
+                            <col key={aspect.id} className="w-20" />
+                        ))}
+                        <col className="w-24" />
+                    </colgroup>
                     <thead>
                     <tr className="bg-gray-100">
-                        <th className="border p-2">
-                            <button
-                                onClick={() => requestSort('name')}
-                                className={`font-bold w-full text-left flex items-center justify-between ${sortConfig.key === 'name' ? 'text-blue-600' : ''}`}
-                            >
-                                Products {getSortIcon('name')}
-                            </button>
-                        </th>
+                        <th className="border p-2 sticky left-0 bg-gray-100 z-10">Products</th>
                         {aspects.map(aspect => (
                             <th key={aspect.id} className="border p-2">
                                 <div className="flex flex-col items-center">
-                                    <label className="font-bold">{aspect.name}</label>
+                    <span className="font-bold whitespace-nowrap overflow-hidden text-overflow-ellipsis">
+                      {aspect.name}
+                    </span>
                                     <input
                                         type="text"
                                         inputMode="numeric"
                                         pattern="[1-5]"
                                         value={aspect.weight}
                                         onChange={(e) => updateAspect(aspect.id, 'weight', e.target.value)}
-                                        className={`mb-1 p-1 border rounded w-full text-center ${
+                                        className={`mt-1 p-1 border rounded w-full text-center ${
                                             aspect.weight < 1 || aspect.weight > 5 ? 'border-red-500' : ''
                                         }`}
                                     />
-                                    <button
-                                        onClick={() => requestSort(aspect.id)}
-                                        className={`mt-1 font-bold flex items-center ${sortConfig.key === aspect.id ? 'text-blue-600' : ''}`}
-                                    >
-                                        Sort {getSortIcon(aspect.id)}
-                                    </button>
                                 </div>
                             </th>
                         ))}
-                        <th className="border p-2 bg-yellow-100">
+                        <th className="border p-2 bg-yellow-100">Totals</th>
+                    </tr>
+                    <tr className="bg-gray-200">
+                        <th className="border p-2 sticky left-0 bg-gray-200 z-10">
+                            <button
+                                onClick={() => requestSort('name')}
+                                className={`font-bold w-full text-left flex items-center justify-between ${sortConfig.key === 'name' ? 'text-blue-600' : ''}`}
+                            >
+                                Sort {getSortIcon('name')}
+                            </button>
+                        </th>
+                        {aspects.map(aspect => (
+                            <th key={aspect.id} className="border p-2">
+                                <button
+                                    onClick={() => requestSort(aspect.id)}
+                                    className={`w-full font-bold flex items-center justify-center ${sortConfig.key === aspect.id ? 'text-blue-600' : ''}`}
+                                >
+                                    Sort {getSortIcon(aspect.id)}
+                                </button>
+                            </th>
+                        ))}
+                        <th className="border p-2 bg-yellow-200">
                             <button
                                 onClick={() => requestSort('total')}
-                                className={`font-bold w-full text-left flex items-center justify-between ${sortConfig.key === 'total' ? 'text-blue-600' : ''}`}
+                                className={`font-bold w-full text-center flex items-center justify-center ${sortConfig.key === 'total' ? 'text-blue-600' : ''}`}
                             >
-                                Totals {getSortIcon('total')}
+                                Sort {getSortIcon('total')}
                             </button>
                         </th>
                     </tr>
@@ -175,15 +192,13 @@ const ComparisonMatrix = () => {
                     <tbody>
                     {sortedProducts.map(product => (
                         <tr key={product.id}>
-                            <td className="border p-2">
-                                <div className="flex items-center">
-                                    <input
-                                        type="text"
-                                        value={product.name}
-                                        onChange={(e) => updateProduct(product.id, 'name', e.target.value)}
-                                        className="p-1 border rounded w-full"
-                                    />
-                                </div>
+                            <td className="border p-2 sticky left-0 bg-white z-10">
+                                <input
+                                    type="text"
+                                    value={product.name}
+                                    onChange={(e) => updateProduct(product.id, 'name', e.target.value)}
+                                    className="p-1 border rounded w-full"
+                                />
                             </td>
                             {aspects.map(aspect => (
                                 <td key={aspect.id} className="border p-2">
